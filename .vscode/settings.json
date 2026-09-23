@@ -1,0 +1,8 @@
+{
+  "python.defaultInterpreterPath": "/home/andreas/ros_venv/bin/python",
+  "python.analysis.extraPaths": [
+    "/home/andreas/research/repo/hrl_xdrive_research",
+    "/opt/ros/humble/lib/python3.10/site-packages",
+    "/opt/ros/humble/local/lib/python3.10/dist-packages"
+  ]
+}

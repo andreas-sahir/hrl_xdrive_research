@@ -1,0 +1,40 @@
+# Configuration file for the Extended Kalman Filter (EKF)
+# in the robot_localization package
+
+ekf_filter_node:
+  ros__parameters:
+    # GENERAL SETTINGS
+    frequency: 30.0
+    two_d_mode: true
+
+    # FRAME PARAMETERS
+    # The names of your coordinate frames
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_link
+    world_frame: odom
+
+    # SENSOR INPUTS
+    # Each sensor is configured below. The *_config matrix specifies
+    # which variables from that sensor are used (true) or ignored (false).
+    # The order is: [X, Y, Z, Roll, Pitch, Yaw, VX, VY, VZ, VRoll, VPitch, VYaw, AX, AY, AZ]
+
+    # Sensor 0: Wheel Odometry
+    # This comes from the omnidirectional_controller
+    odom0: /odom
+    odom0_config: [true,  true,  false,      # Fuse X and Y position
+                   false, false, true,       # Fuse Yaw orientation
+                   true,  true,  false,      # Fuse X and Y linear velocity
+                   false, false, true,       # Fuse Yaw angular velocity
+                   false, false, false]
+    odom0_differential: false
+
+    # Sensor 1: IMU
+    # This comes from the Gazebo IMU plugin
+    imu0: /imu/data
+    imu0_config: [false, false, false,
+                  false, false, true,       # Fuse Yaw orientation
+                  false, false, false,
+                  false, false, true,       # Fuse Yaw angular velocity
+                  true,  false, false]      # Fuse X linear acceleration
+    imu0_differential: false
