@@ -21,17 +21,17 @@ The repository is structured around a three-tiered control hierarchy:
 
 ### 1. Macroscopic Global Planning (A* Search & Sparsification)
 
-Operates offline on an inflated configuration space ($\mathcal{C}_{\text{space}}$) constructed via Minkowski sums ($\mathcal{C}_{\text{obs}} = \mathcal{O} \oplus (-\mathcal{A})$).
+Operates offline on an inflated configuration space (C<sub>space</sub>) constructed via Minkowski sums, where C<sub>obs</sub> = O ⊕ (-A).
 
-Applies a custom trajectory sparsification filter ($1.5\text{ m} - 2.0\text{ m}$ spacing) to provide the strategic agent with a sliding spatial lookahead matrix of upcoming waypoints $(W_1, W_2, W_3)$, resolving myopic execution traps.
+Applies a custom trajectory sparsification filter (1.5 m to 2.0 m spacing) to provide the strategic agent with a sliding spatial lookahead matrix of upcoming waypoints (W<sub>1</sub>, W<sub>2</sub>, W<sub>3</sub>), resolving myopic execution traps.
 
 ### 2. High-Level Strategic Policy (SMDP Soft Actor-Critic / SAC)
 
-Functions as the cognitive navigator operating at lower execution frequencies ($1\text{ Hz} - 5\text{ Hz}$).
+Functions as the cognitive navigator operating at lower execution frequencies (1 Hz to 5 Hz).
 
-Addresses Partial Observability (POMDP) by employing temporal state representation through frame stacking ($N=4$), allowing the policy to infer the velocity and momentum of dynamic threats from raw LiDAR scans.
+Addresses Partial Observability (POMDP) by employing temporal state representation through frame stacking (N = 4), allowing the policy to infer the velocity and momentum of dynamic threats from raw LiDAR scans.
 
-Outputs a 3D continuous macro-action: localized Cartesian displacement offsets $(dx, dy)$ and a dynamic speed scaling factor ($v_{\text{scale}} \in [0.1, 1.0]$).
+Outputs a 3D continuous macro-action: localized Cartesian displacement offsets (dx, dy) and a dynamic speed scaling factor (v<sub>scale</sub> in [0.1, 1.0]).
 
 ### 3. Low-Level Tactical Controller (Discrete PPO)
 
