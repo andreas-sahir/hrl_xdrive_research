@@ -1,31 +1,53 @@
-# Hierarchical Reinforcement Learning for Omni-Directional Navigation and Drift Compensation
+# Hierarchical Reinforcement Learning for Dynamic Navigation and Kinematic Drift Compensation in X-Drive Robot
 
-This repository contains a ROS 2 + Gazebo research codebase for training and evaluating hierarchical reinforcement learning policies on an omnidirectional X-drive robot. The project focuses on autonomous navigation in dynamic and constrained environments, with particular emphasis on reducing kinematic drift, cross-coupled wheel effects, and control instability caused by anisotropic friction and actuator interactions.
+This repository contains the official ROS 2 Humble and Gazebo Classic 11 research implementation for training and evaluating a Hierarchical Reinforcement Learning (HRL) architecture on an omnidirectional X-drive mobile robot.
 
-The work is centered around a hierarchical control architecture that combines:
+The project addresses the challenge of non-linear kinematic drift, anisotropic friction, and dynamic obstacle avoidance. By replacing traditional model-based controllers with a unified multivariable (MIMO) Deep Reinforcement Learning framework, this codebase decouples cognitive pathfinding from high-frequency kinematic execution via a Semi-Markov Decision Process (SMDP).
 
-- a global planning layer for route generation,
-- a high-level strategic policy for macro-level decision making,
-- a low-level reactive controller for precise local execution.
+## Project Vision and Research Questions
 
-The code supports both simulation-based experiments and training/evaluation workflows for PPO, SAC, DDQN, and classical baselines.
+The X-drive mobile platform employs four omni-wheels positioned diagonally at $45^\circ$ angles on a $60\text{ cm} \times 60\text{ cm}$ chassis. While providing 3-DoF holonomic maneuverability in $SE(2)$, real-world interactions between the driven hub and passive rollers create severe anisotropic friction ($\mu_1 = 0.20$ longitudinal grip, $\mu_2 = 0.01$ lateral roller slip).
 
-## Project vision
+Classical decoupled Single-Input Single-Output (SISO) PID controllers fight this natural holonomic drift, generating destructive actuator interference that leads to terminal stalling in high-friction maneuvers. This research codebase proves that a unified MIMO DRL controller autonomously discovers momentum-conserving strategies that preserve kinetic energy and neutralize kinematic drift.
 
-The robot platform in this repository is modeled as a 4-wheel omnidirectional X-drive system. Unlike standard differential-drive robots, this platform can move in multiple directions and rotate simultaneously, but it also exhibits complex nonlinear effects when executing lateral and diagonal maneuvers. This repository explores how reinforcement learning can learn compensation strategies that outperform classical decoupled PID control in trajectory tracking, obstacle avoidance, and motion stability.
+The codebase is engineered to answer two fundamental research questions:
 
-The system is designed to answer the core research question:
+- Kinematic Drift Compensation: How can a unified, multivariable DRL control strategy effectively compensate for non-linear kinematic drift in X-drive robots, overcoming the terminal stalling and actuator fighting inherent to classical decoupled (SISO) controllers?
+- Hierarchical Dynamic Navigation: How can an HRL architecture, modeled as a Semi-Markov Decision Process (SMDP), be structured to simultaneously integrate reactive dynamic obstacle avoidance with low-level drift compensation to ensure safe navigation in complex, wall-bound topologies?
 
-- Can a hierarchical reinforcement learning policy learn to navigate constrained spaces while compensating for the robot's nonideal kinematics and friction-induced drift?
+## Core Architectural Principles
 
-## Main ideas
+The repository is structured around a three-tiered control hierarchy:
 
-- Hierarchical RL with macro and micro control loops
-- Semi-Markov planning style behavior for goal-directed motion
-- Dynamic obstacle handling through map and lidar-based observations
-- Low-level policy trained to learn motion corrections for drift and slip
-- High-level policy trained to choose long-horizon navigation behaviors
-- Classical baselines included for comparison against reinforcement learning controllers
+### 1. Macroscopic Global Planning (A* Search & Sparsification)
+
+Operates offline on an inflated configuration space ($\mathcal{C}_{\text{space}}$) constructed via Minkowski sums ($\mathcal{C}_{\text{obs}} = \mathcal{O} \oplus (-\mathcal{A})$).
+
+Applies a custom trajectory sparsification filter ($1.5\text{ m} - 2.0\text{ m}$ spacing) to provide the strategic agent with a sliding spatial lookahead matrix of upcoming waypoints $(W_1, W_2, W_3)$, resolving myopic execution traps.
+
+### 2. High-Level Strategic Policy (SMDP Soft Actor-Critic / SAC)
+
+Functions as the cognitive navigator operating at lower execution frequencies ($1\text{ Hz} - 5\text{ Hz}$).
+
+Addresses Partial Observability (POMDP) by employing temporal state representation through frame stacking ($N=4$), allowing the policy to infer the velocity and momentum of dynamic threats from raw LiDAR scans.
+
+Outputs a 3D continuous macro-action: localized Cartesian displacement offsets $(dx, dy)$ and a dynamic speed scaling factor ($v_{\text{scale}} \in [0.1, 1.0]$).
+
+### 3. Low-Level Tactical Controller (Discrete PPO)
+
+Functions as a high-frequency ($50\text{ Hz}$) smart actuator with frozen policy weights during high-level training to maintain environment stationarity.
+
+Employs an 11-action discrete space (terminal braking, cardinal translations, $\sin(45^\circ)$-normalized diagonal translations, and pure rotations) mapped to global chassis velocities ($v_x, v_y, \omega_z$) via Inverse Kinematics.
+
+Serves as an architectural regularizer that prevents destabilizing motor jitter and achieves terminal braking precision within a $0.08\text{ m}$ acquisition radius.
+
+## Key Contributions and Findings
+
+- Momentum Conservation vs. Terminal Stalling: Demonstrates that while classical PID controllers achieve a low success rate ($25.0\%$) due to actuator cancellation in high friction, discrete PPO achieves an $87.5\%$ success rate by permitting controlled lateral sideslip to overcome static friction.
+- SMDP Temporal Abstraction: Decouples high-level strategic reasoning from low-level execution, achieving a $100.0\%$ navigation success rate in open environments populated by sinusoidal dynamic obstacles (Simple Harmonic Motion).
+- Sub-Centimeter Drift Compensation: In complex wall-bound maze topologies (Stage 4), the frozen low-level controller maintains an average Cross-Track Error (CTE) of $0.0077\text{ m}$ (less than $1\text{ cm}$ of lateral deviation), proving complete neutralization of physical slipping.
+- Curriculum Learning Pipeline: Features a sequential 4-stage evolutionary training pipeline (Empty Arena $\rightarrow$ Static Pillars $\rightarrow$ Dynamic Threats $\rightarrow$ Wall-Bound Maze) that prevents early policy collapse and builds robust spatial generalization.
+
 
 ## Repository layout
 
@@ -180,14 +202,7 @@ Evaluation scripts are stored under:
 - numpy, scipy, gymnasium, stable-baselines3
 - PyTorch
 - pyyaml
-
-### Recommended environment
-This project is intended to run inside the repository's ROS venv, for example:
-
-```bash
-source /home/andreas/ros_venv/bin/activate
-source /opt/ros/humble/setup.bash
-```
+- Python dependencies for this project are also listed in [requirements.txt](requirements.txt).
 
 ## Installation
 

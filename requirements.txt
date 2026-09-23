@@ -1,0 +1,12 @@
+# Python dependencies for the HRL X-drive robot project
+# Install in the ROS virtual environment, e.g.:
+# source /home/andreas/ros_venv/bin/activate
+# python -m pip install -r requirements.txt
+
+numpy
+scipy
+gymnasium
+stable-baselines3
+torch
+pyyaml
+matplotlib
