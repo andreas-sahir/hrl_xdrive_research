@@ -10,7 +10,7 @@ from stable_baselines3 import SAC
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize, VecFrameStack
 
 # Import your environment (Stages 1-3 version)
-from hrl_env123 import HRLNavEnv
+from rl.environments.hrl_env123 import HRLNavEnv
 
 def calc_local_errors(start_pose, local_target, current_pose):
     """Calculates Local Euclidean, Longitudinal, and Cross-Track Errors."""

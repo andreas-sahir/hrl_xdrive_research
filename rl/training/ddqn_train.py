@@ -7,7 +7,7 @@ import os
 from datetime import datetime
 
 # Import the DDQN environment
-from ddqn_env import OmniRobotDDQNEnv
+from rl.environments.ddqn_env import OmniRobotDDQNEnv
 
 def main():
     rclpy.init()

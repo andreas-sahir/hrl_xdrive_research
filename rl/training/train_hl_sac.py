@@ -6,7 +6,7 @@ from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize, VecFrame
 from stable_baselines3.common.monitor import Monitor
 import os
 from datetime import datetime
-from hrl_env import HRLNavEnv
+from rl.environments.hrl_env import HRLNavEnv
 
 def main():
     rclpy.init()

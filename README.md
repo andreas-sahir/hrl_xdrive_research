@@ -263,19 +263,19 @@ ros2 launch my_robot simulation.launch.py
 source /home/andreas/ros_venv/bin/activate
 source /opt/ros/humble/setup.bash
 source ~/ros2_ws/install/setup.bash
-python rl/training/train_ppo.py
+python -m rl.training.train_ppo
 ```
 
 ### Train high-level policy
 
 ```bash
-python rl/training/train_hl_sac.py
+python -m rl.training.train_hl_sac
 ```
 
 ### Run evaluation
 
 ```bash
-python rl/evaluation/evaluate_goal.py
+python -m rl.evaluation.evaluate_goal
 ```
 
 ## Notes

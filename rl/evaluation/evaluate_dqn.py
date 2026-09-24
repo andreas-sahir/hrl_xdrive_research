@@ -11,7 +11,7 @@ from datetime import datetime
 from std_srvs.srv import Empty 
 from stable_baselines3 import DQN
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
-from ddqn_env import OmniRobotDDQNEnv
+from rl.environments.ddqn_env import OmniRobotDDQNEnv
 
 def get_latest_model_path():
     # Look for folders starting with "rl_discrete_ddqn_" in the current dir

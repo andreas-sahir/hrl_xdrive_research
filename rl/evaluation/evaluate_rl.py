@@ -11,7 +11,7 @@ from datetime import datetime
 from std_srvs.srv import Empty 
 from stable_baselines3 import SAC
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
-from tracker_rl import OmniRobotTrackerEnv 
+from rl.environments.continous_tracker_env import OmniRobotTrackerEnv
 
 # UPDATE YOUR PATHS HERE IF NEEDED
 MODEL_PATH = "/home/andreas/research/ros_ws/sac_continuous_delta_20260208_225433/sac_tracker_final.zip"

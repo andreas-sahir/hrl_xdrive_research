@@ -9,7 +9,7 @@ import os
 from datetime import datetime
 
 # Import the UPDATED CONTINUOUS environment
-from tracker_rl import OmniRobotTrackerEnv
+from rl.environments.continous_tracker_env import OmniRobotTrackerEnv
 
 def main():
     rclpy.init()

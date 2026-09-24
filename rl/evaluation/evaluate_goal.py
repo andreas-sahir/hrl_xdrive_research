@@ -11,7 +11,7 @@ from datetime import datetime
 from std_srvs.srv import Empty 
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
-from omni_rl_env import OmniRobotRLController
+from rl.environments.omni_rl_env import OmniRobotRLController
 
 # ------------------------------------------------------------------
 # MODEL DISCOVERY AND EVALUATION SETUP

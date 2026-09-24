@@ -9,7 +9,7 @@ from datetime import datetime
 from stable_baselines3 import SAC
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize, VecFrameStack
 
-from hrl_env import HRLNavEnv
+from rl.environments.hrl_env import HRLNavEnv
 
 def calc_local_errors(start_pose, local_target, current_pose):
     """Calculates Local Euclidean, Longitudinal, and Cross-Track Errors."""
